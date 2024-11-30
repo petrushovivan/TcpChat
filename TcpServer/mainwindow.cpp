@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    readMessage.clear();
 }
 
 MainWindow::~MainWindow()
@@ -16,29 +17,39 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startButton_clicked()
 {
-    // Создаем и настраиваем сервер
-    server = new QTcpServer(this);
-    connect(server, &QTcpServer::newConnection, this, &MainWindow::clientNewConnection);
+    if(ui->startButton->text() == "Старт"){
+        // Создаем и настраиваем сервер
+        server = new QTcpServer(this);
+        connect(server, &QTcpServer::newConnection, this, &MainWindow::clientNewConnection);
 
-    bool portOk;
-    ushort port = ui->listenPortEdit->text().toUShort(&portOk);
-    if(!portOk){
-        QMessageBox::warning(this, "Внимание!", "Введенный вами порт не корректный");
-        delete server;
-        server = nullptr;
-        return;
-    }
+        bool portOk;
+        ushort port = ui->listenPortEdit->text().toUShort(&portOk);
+        if(!portOk){
+            QMessageBox::warning(this, "Внимание!", "Введенный вами порт не корректный");
+            delete server;
+            server = nullptr;
+            return;
+        }
 
-    // Запускаем прослушивание порта сервером для ожидания клиентских подключений
-    bool serverOk = server->listen(QHostAddress::Any, port);
-    if(!serverOk){
-        QMessageBox::warning(this, "Внимание!", server->errorString());
-        delete server;
-        server = nullptr;
-        return;
+        // Запускаем прослушивание порта сервером для ожидания клиентских подключений
+        bool serverOk = server->listen(QHostAddress::Any, port);
+        if(!serverOk){
+            QMessageBox::warning(this, "Внимание!", server->errorString());
+            delete server;
+            server = nullptr;
+            return;
+        }
+        ui->listenPortEdit->setReadOnly(true);
+        ui->startButton->setText("Стоп");
     }
-    ui->startButton->setEnabled(false);
-    // Обработать результат listen
+    else{
+        if(server!=nullptr){
+            delete server;
+            server = nullptr;
+        }
+        ui->listenPortEdit->setReadOnly(false);
+        ui->startButton->setText("Старт");
+    }
 }
 
 // Обработка подключения нового клиента
@@ -62,19 +73,28 @@ void MainWindow::clientNewConnection()
 // Обработка приема данных от клиентов
 void MainWindow::clientReadyRead()
 {
+    QByteArray data;
     // Клиентский сокет, который прислал данные
     QTcpSocket *client = (QTcpSocket*)sender();
 
-    // Читаем данные от клиента.
-    // TODO: FIX ME
-    // Так как TCP ориентирован на потоковую передачу данных, то такой подход
-    // не будет работать всегда (например, для больших сообщений).
-    // Здесь требуется реализовать протокол прикладного уровня и алгоритм получения
-    // фиксированных идентифицируемых сообщений (будет продемонстрировано в следующий раз).
-    QByteArray buffer = client->readAll();
+    readMessage.append(client->readAll());
+
+    while ((unsigned int)readMessage.size() >= sizeof(uint32_t)) { // Проверяем, есть ли заголовок
+        // Читаем длину сообщения
+        uint32_t dataSize = 0;
+        memcpy(&dataSize, readMessage.constData(), sizeof(uint32_t));
+
+        // Проверяем, достаточно ли данных для полного сообщения
+        if ((unsigned int)readMessage.size() < sizeof(uint32_t) + dataSize)
+            return; // Полные данные еще не получены
+
+        // Извлекаем сообщение
+        data = readMessage.mid(sizeof(uint32_t), dataSize);
+        readMessage.remove(0, sizeof(uint32_t) + dataSize); // Удаляем обработанные данные
+    }
 
     // Сообщение от клиента
-    QString message = QString::fromUtf8(buffer);
+    QString message = QString::fromUtf8(data);
     // IP адрес клиента, отправившего сообщение
     QString ip = client->peerAddress().toString();
 
@@ -82,12 +102,6 @@ void MainWindow::clientReadyRead()
     QString text = ip + "\n" + message + "\n";
     ui->chatEdit->append(text);
 
-    // Пересылаем сообщение остальным клиентам
-    // TODO: FIX ME
-    // Так как TCP ориентирован на потоковую передачу данных, то такой подход
-    // не будет работать всегда (например, для больших сообщений).
-    // Здесь требуется реализовать протокол прикладного уровня и алгоритм формирования
-    // фиксированных идентифицируемых сообщений (будет продемонстрировано в следующий раз).
     for(QTcpSocket *cli : clients){
         if(cli != client)
             cli->write(text.toUtf8());

@@ -21,29 +21,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
- // Обработка приема данных от сервера
+// Обработка приема данных от сервера
 void MainWindow::socketReadyRead()
 {
     readMessage.append(socket->readAll());
 
-       while ((unsigned int)readMessage.size() >= sizeof(uint32_t)) { // Проверяем, есть ли заголовок
-           // Читаем длину сообщения
-           uint32_t dataSize = 0;
-           memcpy(&dataSize, readMessage.constData(), sizeof(uint32_t));
+    while ((unsigned int)readMessage.size() >= sizeof(uint32_t)) { // Проверяем, есть ли заголовок
+        // Читаем длину сообщения
+        uint32_t dataSize = 0;
+        memcpy(&dataSize, readMessage.constData(), sizeof(uint32_t));
 
-           // Проверяем, достаточно ли данных для полного сообщения
-           if ((unsigned int)readMessage.size() < sizeof(uint32_t) + dataSize)
-               return; // Полные данные еще не получены
+        // Проверяем, достаточно ли данных для полного сообщения
+        if ((unsigned int)readMessage.size() < sizeof(uint32_t) + dataSize)
+            return; // Полные данные еще не получены
 
-           // Извлекаем сообщение
-           QByteArray data = readMessage.mid(sizeof(uint32_t), dataSize);
-           readMessage.remove(0, sizeof(uint32_t) + dataSize); // Удаляем обработанные данные
+        // Извлекаем сообщение
+        QByteArray data = readMessage.mid(sizeof(uint32_t), dataSize);
+        readMessage.remove(0, sizeof(uint32_t) + dataSize); // Удаляем обработанные данные
 
-           // Обрабатываем полученное сообщение
-           QString message = QString::fromUtf8(data);
-           ui->chatEdit->append("Server:");
-           ui->chatEdit->append(message);
-       }
+        // Обрабатываем полученное сообщение
+        QString message = QString::fromUtf8(data);
+        ui->chatEdit->append("Server:");
+        ui->chatEdit->append(message);
+    }
 }
 
 // Обработка отключения от сервера

@@ -39,5 +39,8 @@ private:
 
     // Список подключенных клиентов (сокетов).
     QList<QTcpSocket*> clients;
+
+    QByteArray readMessage;
+
 };
 #endif // MAINWINDOW_H

@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QHostAddress>
+#include <QUdpSocket>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,9 +16,12 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
+public slots:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void connectToRemoteServer();
+
     // Обработка приема данных от сервера
     void socketReadyRead();
     // Обработка отключения от сервера
@@ -68,5 +72,7 @@ private:
 
     // Клиентский сокет
     QTcpSocket *socket;
+
+    QUdpSocket *connector;
 };
 #endif // MAINWINDOW_H
