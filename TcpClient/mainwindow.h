@@ -7,7 +7,8 @@
 #include <QDebug>
 #include <QHostAddress>
 #include <QUdpSocket>
-
+#include <QHostAddress>
+#include <QTimer>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -16,11 +17,15 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public slots:
+public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     void connectToRemoteServer();
+
+    void createUDPSocket();
+
+    void discovery();
 
     // Обработка приема данных от сервера
     void socketReadyRead();
@@ -31,6 +36,8 @@ public slots:
     // Желательно реализовавть еще и обработку ошибок сокета
     // void socketError(...);
 private slots:
+    void connectorReadyRead();
+
     void on_connectToServerButton_clicked();
 
     void on_sendMessageButton_clicked();
@@ -64,7 +71,10 @@ private slots:
     void on_sendMessageEdit_textChanged();
 
 private:
+    int UDP_DISCOVERY_PORT = 40000;
     Ui::MainWindow *ui;
+
+    QTimer timer;
 
     QByteArray readMessage;
 
