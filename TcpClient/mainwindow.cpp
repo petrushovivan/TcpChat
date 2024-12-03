@@ -61,30 +61,10 @@ void MainWindow::socketConnected()
 
 void MainWindow::on_connectToServerButton_clicked()
 {
-    // "Координаты" сервера (IP-адрес и порт).
-    QString serverIp = ui->serverIpEdit->text();
-    QHostAddress serverAddress;
+    serverScanner.connectToServer(socket, 40000);
 
-    if(!serverAddress.setAddress(serverIp)){
-        QMessageBox::warning(this, "Внимание!", "Введенный вами ip не корректный");
-        return;
-    }
-
-    bool portIsOk;
-    ushort serverPort = ui->serverPortEdit->text().toUShort(&portIsOk);
-
-    if(!portIsOk){
-        QMessageBox::warning(this, "Внимание!", "Введенный вами порт не корректный");
-        return;
-    }
-
-    // Подключаемся к серверу.
-    // Может быть долго...
-
-    socket->connectToHost(serverAddress, serverPort);
-
-    // Дождаться подключения к серверу можно и тут.
-    // Ожидание (10 сек) подключения ..
+//     Дождаться подключения к серверу можно и тут.
+//     Ожидание (10 сек) подключения ..
 
     bool connected = socket->waitForConnected(10000);
     ui->sendMessageButton->setEnabled(connected);

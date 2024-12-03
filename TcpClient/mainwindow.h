@@ -5,10 +5,8 @@
 #include <QTcpSocket>
 #include <QMessageBox>
 #include <QDebug>
-#include <QHostAddress>
-#include <QUdpSocket>
-#include <QHostAddress>
-#include <QTimer>
+
+#include "serverscanner.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -20,13 +18,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    void connectToRemoteServer();
-
-    void createUDPSocket();
-
-    void discovery();
-
     // Обработка приема данных от сервера
     void socketReadyRead();
     // Обработка отключения от сервера
@@ -36,8 +27,6 @@ public:
     // Желательно реализовавть еще и обработку ошибок сокета
     // void socketError(...);
 private slots:
-    void connectorReadyRead();
-
     void on_connectToServerButton_clicked();
 
     void on_sendMessageButton_clicked();
@@ -71,18 +60,15 @@ private slots:
     void on_sendMessageEdit_textChanged();
 
 private:
-    int UDP_DISCOVERY_PORT = 40000;
     Ui::MainWindow *ui;
-
-    QTimer timer;
 
     QByteArray readMessage;
 
     bool connectedToServer;
 
+    ServerScanner serverScanner; // Инкапсулирует поиск сервера через qudp
+
     // Клиентский сокет
     QTcpSocket *socket;
-
-    QUdpSocket *connector;
 };
 #endif // MAINWINDOW_H

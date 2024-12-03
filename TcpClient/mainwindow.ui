@@ -49,45 +49,6 @@
      <string>Чат</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="serverIpEdit">
-    <property name="geometry">
-     <rect>
-      <x>194</x>
-      <y>11</y>
-      <width>202</width>
-      <height>39</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>127.0.0.1</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>178</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Адрес сервера</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="serverPortEdit">
-    <property name="geometry">
-     <rect>
-      <x>575</x>
-      <y>11</y>
-      <width>201</width>
-      <height>39</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>40000</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="connectToServerButton">
     <property name="geometry">
      <rect>
@@ -99,19 +60,6 @@
     </property>
     <property name="text">
      <string>Подключиться</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>402</x>
-      <y>10</y>
-      <width>167</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Порт сервера</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="chatEdit">
