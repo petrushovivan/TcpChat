@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QNetworkDatagram>
 #include <QStringList>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,6 +34,8 @@ private slots:
     void clientDisconnected();
 
     void udpSocketReadyRead();
+
+    QString getUserNamesString();
 
 private:
     Ui::MainWindow *ui;

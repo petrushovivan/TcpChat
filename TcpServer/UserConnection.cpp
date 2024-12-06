@@ -9,3 +9,12 @@ void MainWindow::udpSocketReadyRead(){
         udpSocket->writeDatagram(datagram.makeReply(response));
     }
 }
+
+QString MainWindow::getUserNamesString()
+{
+    QString result = "";
+    for(QString s: usersNames){
+        result += s + "$";
+    }
+    return result;
+}

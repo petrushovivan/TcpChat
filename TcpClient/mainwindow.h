@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTcpSocket>
 #include <QUdpSocket>
+#include <QTcpSocket>
 #include <QMessageBox>
 #include <QDebug>
 #include <QTimer>

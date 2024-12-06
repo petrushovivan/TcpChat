@@ -42,7 +42,12 @@ void UserNameForm::closeEvent(QCloseEvent *e)
 
 void UserNameForm::on_pushButtonContinue_clicked()
 {
-    emit sendUserName(ui->lineEditName->text());
-    this->close();
-    this->deleteLater();
+    if(ui->lineEditName->text().contains("$")){
+        QMessageBox::information(this, "Внимание!", "Знак $ - служебный, его использовать в имени нельзя");
+    }
+    else{
+        emit sendUserName(ui->lineEditName->text());
+        this->close();
+        this->deleteLater();
+    }
 }

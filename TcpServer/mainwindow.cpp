@@ -70,24 +70,30 @@ void MainWindow::clientReadyRead()
         readMessage.remove(0, sizeof(uint32_t) + dataSize); // Удаляем обработанные данные
     }
 
-    // Сообщение от клиента
-    QString message = QString::fromUtf8(data);
+    if(data.contains(" ")){
+        // Сообщение от клиента
+        QString message = QString::fromUtf8(data);
+        QString ip = client->peerAddress().toString();
 
-    QString ip = client->peerAddress().toString();
+        // Отображаем сообщение
+        QString text = ip + "\n" + message + "\n";
+        ui->chatEdit->append(text);
 
-    // Отображаем сообщение
-    QString text = ip + "\n" + message + "\n";
-    ui->chatEdit->append(text);
+        QByteArray response;
+        uint32_t dataSize = data.size();
+        response.append((char*)(&dataSize), sizeof(dataSize));
+        response.append(data);
 
-    QByteArray response;
-    uint32_t dataSize = data.size();
-    response.append((char*)(&dataSize), sizeof(dataSize));
-    response.append(data);
-
-    for(QTcpSocket *cli : clients) {
-        if(cli != client)
-            cli->write(response);
-    }    
+        for(QTcpSocket *cli : clients) {
+            if(cli != client)
+                cli->write(response);
+        }
+    }
+    else{
+        QString userName = QString::fromUtf8(data);
+        qDebug()<<userName;
+        usersNames.append(userName);
+    }
 }
 
 // Обработка отключения клиента
@@ -99,6 +105,7 @@ void MainWindow::clientDisconnected()
     // Удаляем клиента из списков
     int index = clients.indexOf(client);
     if(index >= 0) {
+        usersNames.removeAt(index);
         clients.removeAt(index);
         ui->clientListWidget->takeItem(index);
     }

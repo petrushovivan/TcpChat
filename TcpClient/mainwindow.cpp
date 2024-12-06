@@ -85,6 +85,13 @@ void MainWindow::socketDisconnected()
 // Обработка подключения к серверу
 void MainWindow::socketConnected()
 {
+    QString messageText = ui->lineEditName->text();
+    QByteArray data = messageText.toUtf8();
+    uint32_t dataSize = data.size();
+    QByteArray message;
+    message.append((char*)(&dataSize), sizeof(dataSize));
+    message.append(data);
+    socket->write(message);
     ui->sendMessageButton->setEnabled(true);
 }
 
