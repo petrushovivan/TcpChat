@@ -93,6 +93,15 @@ void MainWindow::clientReadyRead()
         QString userName = QString::fromUtf8(data);
         qDebug()<<userName;
         usersNames.append(userName);
+
+        QByteArray users = getUserNamesString().toUtf8();
+        QByteArray response;
+        uint32_t dataSize = users.size();
+        response.append((char*)(&dataSize), sizeof(dataSize));
+        response.append(users);
+        for(QTcpSocket *cli : clients) {
+            cli->write(response);
+        }
     }
 }
 

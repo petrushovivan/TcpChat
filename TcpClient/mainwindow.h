@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QNetworkDatagram>
 #include <QStringList>
+#include <QDateTime>
 
 #include "usernameform.h"
 QT_BEGIN_NAMESPACE

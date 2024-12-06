@@ -60,16 +60,27 @@ void MainWindow::socketReadyRead()
 
         // Обрабатываем полученное сообщение
         QString message = QString::fromUtf8(data);
-        QStringList list = message.split(" ");
-        QString name = list.at(list.size()-1);
-        list.pop_back();
+        if(message.contains(" ")){
+            QStringList list = message.split(" ");
+            QString name = list.at(list.size()-1);
+            list.pop_back();
 
-        message.clear();
-        for(QString s:list){
-            message+=s;
+            message.clear();
+            for(QString s:list){
+                message+=s;
+            }
+            ui->chatEdit->append(name + " в " + QDateTime::currentDateTime().toString());
+            ui->chatEdit->append(message);
         }
-        ui->chatEdit->append(name);
-        ui->chatEdit->append(message);
+        else {
+            ui->textEditUsers->clear();
+            QStringList list = message.split("$");
+            for(QString s : list){
+                if(!s.isEmpty()){
+                    ui->textEditUsers->append("* " + s);
+                }
+            }
+        }
     }
 }
 
@@ -77,6 +88,9 @@ void MainWindow::socketReadyRead()
 void MainWindow::socketDisconnected()
 {
     ui->frameConnection->setStyleSheet("background-color: red;");
+    ui->textEditUsers->setTextColor("red");
+    ui->textEditUsers->setText("Проблема на стороне сервера, она уже решается");
+    ui->textEditUsers->setTextColor("black");
     ui->sendMessageButton->setEnabled(false);
     connectedToServer = false;
     timer->start(500);
@@ -111,7 +125,7 @@ void MainWindow::on_sendMessageButton_clicked()
 
     socket->write(message);
     // Отображаем отправленное сообщение
-    ui->chatEdit->append("ME");
+    ui->chatEdit->append("ME в " + QDateTime::currentDateTime().toString());
     ui->chatEdit->append(text);
     ui->sendMessageEdit->setText("");
 }
