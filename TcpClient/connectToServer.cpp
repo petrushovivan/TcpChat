@@ -2,9 +2,10 @@
 #include "ui_mainwindow.h"
 
 void MainWindow::discovery() {
+    if(canStart){
     QByteArray request("Ping");
-    ui->frameConnection->setStyleSheet("background-color: red;");
     udpSocket->writeDatagram(request, QHostAddress::Broadcast, udpPort);
+    }
 }
 
 void MainWindow::udpSocketReadyRead() {
@@ -21,6 +22,6 @@ void MainWindow::udpSocketReadyRead() {
     }
     else{
         connectedToServer = true;
-        ui->frameConnection->setStyleSheet("background-color: red;");
+        ui->frameConnection->setStyleSheet("background-color: green;");
     }
 }

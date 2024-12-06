@@ -4,8 +4,11 @@
 #include <QMainWindow>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QUdpSocket>
 #include <QList>
 #include <QMessageBox>
+#include <QNetworkDatagram>
+#include <QStringList>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,8 +23,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_startButton_clicked();
-
     // Обработка подключения нового клиента
     void clientNewConnection();
 
@@ -31,8 +32,15 @@ private slots:
     // Обработка отключения клиента
     void clientDisconnected();
 
+    void udpSocketReadyRead();
+
 private:
     Ui::MainWindow *ui;
+
+    ushort udpPort;
+    ushort tcpPort;
+
+    QUdpSocket *udpSocket;
 
     // TCP-сервер. Позволяет принимать входящие соединения.
     QTcpServer *server;
@@ -42,5 +50,6 @@ private:
 
     QByteArray readMessage;
 
+    QList<QString> usersNames;
 };
 #endif // MAINWINDOW_H

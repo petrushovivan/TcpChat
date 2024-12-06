@@ -28,7 +28,7 @@ void UserNameForm::on_lineEditName_textChanged()
 void UserNameForm::closeEvent(QCloseEvent *e)
 {
     if(ui->lineEditName->text().isEmpty()){
-        int response = QMessageBox::information(this, "Внимание!", "Если вы закроете это оеоно то вам будет выдано имя по умолчанию!"
+        int response = QMessageBox::information(this, "Внимание!", "Если вы закроете это окно то вам будет выдано имя по умолчанию!"
                                                 , QMessageBox::Yes, QMessageBox::No);
         if(response == QMessageBox::Yes){
             ui->lineEditName->setText("User");

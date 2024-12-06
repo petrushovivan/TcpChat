@@ -7,49 +7,26 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     readMessage.clear();
+    udpSocket = new QUdpSocket(this);
+    tcpPort = 40000;
+    udpPort = 40001;
+
+    server = new QTcpServer(this);
+    connect(server, &QTcpServer::newConnection, this, &MainWindow::clientNewConnection);
+
+    bool serverOk = server->listen(QHostAddress::Any, tcpPort);
+
+    connect(udpSocket, &QUdpSocket::readyRead, this, &MainWindow::udpSocketReadyRead);
+
+    bool udpOk = udpSocket->bind(udpPort);
+    if(!udpOk&&serverOk){
+        QMessageBox::information(this, "Внимание!", "Сервер не работает!");
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-
-void MainWindow::on_startButton_clicked()
-{
-    if(ui->startButton->text() == "Старт"){
-        // Создаем и настраиваем сервер
-        server = new QTcpServer(this);
-        connect(server, &QTcpServer::newConnection, this, &MainWindow::clientNewConnection);
-
-        bool portOk;
-        ushort port = ui->listenPortEdit->text().toUShort(&portOk);
-        if(!portOk){
-            QMessageBox::warning(this, "Внимание!", "Введенный вами порт не корректный");
-            delete server;
-            server = nullptr;
-            return;
-        }
-
-        // Запускаем прослушивание порта сервером для ожидания клиентских подключений
-        bool serverOk = server->listen(QHostAddress::Any, port);
-        if(!serverOk){
-            QMessageBox::warning(this, "Внимание!", server->errorString());
-            delete server;
-            server = nullptr;
-            return;
-        }
-        ui->listenPortEdit->setReadOnly(true);
-        ui->startButton->setText("Стоп");
-    }
-    else{
-        if(server!=nullptr){
-            delete server;
-            server = nullptr;
-        }
-        ui->listenPortEdit->setReadOnly(false);
-        ui->startButton->setText("Старт");
-    }
 }
 
 // Обработка подключения нового клиента
@@ -95,17 +72,22 @@ void MainWindow::clientReadyRead()
 
     // Сообщение от клиента
     QString message = QString::fromUtf8(data);
-    // IP адрес клиента, отправившего сообщение
+
     QString ip = client->peerAddress().toString();
 
     // Отображаем сообщение
     QString text = ip + "\n" + message + "\n";
     ui->chatEdit->append(text);
 
-    for(QTcpSocket *cli : clients){
+    QByteArray response;
+    uint32_t dataSize = data.size();
+    response.append((char*)(&dataSize), sizeof(dataSize));
+    response.append(data);
+
+    for(QTcpSocket *cli : clients) {
         if(cli != client)
-            cli->write(text.toUtf8());
-    }
+            cli->write(response);
+    }    
 }
 
 // Обработка отключения клиента

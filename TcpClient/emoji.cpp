@@ -13,6 +13,7 @@ void MainWindow::on_pushButtonSmiley_clicked()
 
 void MainWindow::setUserName(QString userName) {
     ui->lineEditName->setText(userName);
+    canStart = true;
 }
 
 void MainWindow::on_pushButton_clicked()

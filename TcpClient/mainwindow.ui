@@ -39,10 +39,10 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>60</y>
+      <x>160</x>
+      <y>70</y>
       <width>161</width>
-      <height>33</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -52,9 +52,9 @@
    <widget class="QTextEdit" name="chatEdit">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>150</x>
       <y>98</y>
-      <width>1011</width>
+      <width>871</width>
       <height>501</height>
      </rect>
     </property>
@@ -65,9 +65,9 @@
    <widget class="QTextEdit" name="sendMessageEdit">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>150</x>
       <y>601</y>
-      <width>751</width>
+      <width>611</width>
       <height>171</height>
      </rect>
     </property>
@@ -328,8 +328,8 @@
    <widget class="QLineEdit" name="lineEditName">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>30</y>
+      <x>210</x>
+      <y>20</y>
       <width>191</width>
       <height>31</height>
      </rect>
@@ -365,6 +365,29 @@
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Подключенные клиенты</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditUsers">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>131</width>
+      <height>671</height>
+     </rect>
     </property>
    </widget>
   </widget>

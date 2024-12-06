@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     tcpPort = 40000;
     udpPort = 40001;
+    canStart = false;
     connectedToServer = false;
     readMessage.clear();
     timer->start(500);
@@ -31,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widgetEmoji->hide();
     userNameForm->show();
     ui->sendMessageButton->setEnabled(false);
-  //  ui->frameConnection->setStyleSheet("background-color: red;");
+    ui->frameConnection->setStyleSheet("background-color: red;");
 }
 
 MainWindow::~MainWindow()
@@ -59,7 +60,15 @@ void MainWindow::socketReadyRead()
 
         // Обрабатываем полученное сообщение
         QString message = QString::fromUtf8(data);
-        ui->chatEdit->append("Server:");
+        QStringList list = message.split(" ");
+        QString name = list.at(list.size()-1);
+        list.pop_back();
+
+        message.clear();
+        for(QString s:list){
+            message+=s;
+        }
+        ui->chatEdit->append(name);
         ui->chatEdit->append(message);
     }
 }
@@ -67,13 +76,15 @@ void MainWindow::socketReadyRead()
 // Обработка отключения от сервера
 void MainWindow::socketDisconnected()
 {
+    ui->frameConnection->setStyleSheet("background-color: red;");
     ui->sendMessageButton->setEnabled(false);
+    connectedToServer = false;
+    timer->start(500);
 }
 
 // Обработка подключения к серверу
 void MainWindow::socketConnected()
 {
-    // Дождаться подключения к серверу можно и тут.
     ui->sendMessageButton->setEnabled(true);
 }
 
@@ -81,7 +92,8 @@ void MainWindow::on_sendMessageButton_clicked()
 {
     // Веденное сообщение
     QString text = ui->sendMessageEdit->toPlainText();
-    QByteArray data = text.toUtf8();
+    QString name = ui->lineEditName->text();
+    QByteArray data = (text + " " + name).toUtf8();
 
     uint32_t dataSize = data.size();
 
@@ -94,6 +106,7 @@ void MainWindow::on_sendMessageButton_clicked()
     // Отображаем отправленное сообщение
     ui->chatEdit->append("ME");
     ui->chatEdit->append(text);
+    ui->sendMessageEdit->setText("");
 }
 
 void MainWindow::on_sendMessageEdit_textChanged()

@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QNetworkDatagram>
+#include <QStringList>
 
 #include "usernameform.h"
 QT_BEGIN_NAMESPACE
@@ -78,6 +79,7 @@ private:
     ushort tcpPort;
     QByteArray readMessage;
     bool connectedToServer;
+    bool canStart;
     QTcpSocket *socket; // Клиентский сокет
 };
 #endif // MAINWINDOW_H
