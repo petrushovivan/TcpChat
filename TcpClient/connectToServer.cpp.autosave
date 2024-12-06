@@ -3,7 +3,6 @@
 
 void MainWindow::discovery() {
     QByteArray request("Ping");
-    ui->frameConnection->setStyleSheet("background-color: red;");
     udpSocket->writeDatagram(request, QHostAddress::Broadcast, udpPort);
 }
 

@@ -6,14 +6,32 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    readMessage.clear();
+
     socket = new QTcpSocket(this);
+    udpSocket = new QUdpSocket(this);
+    timer = new QTimer(this);
+    userNameForm = new UserNameForm();
+
+    connect(userNameForm, &UserNameForm::sendUserName, this, &MainWindow::setUserName);
+
+    connect(udpSocket, &QUdpSocket::readyRead, this, &MainWindow::udpSocketReadyRead);
+    connect(timer, &QTimer::timeout, this, &MainWindow::discovery);
+    discovery();
+
+    tcpPort = 40000;
+    udpPort = 40001;
+    connectedToServer = false;
+    readMessage.clear();
+    timer->start(500);
+
     connect(socket, &QTcpSocket::readyRead, this, &MainWindow::socketReadyRead);
     connect(socket, &QTcpSocket::disconnected, this, &MainWindow::socketDisconnected);
     connect(socket, &QTcpSocket::connected, this, &MainWindow::socketConnected);
-    connectedToServer = false;
+
     ui->widgetEmoji->hide();
+    userNameForm->show();
     ui->sendMessageButton->setEnabled(false);
+  //  ui->frameConnection->setStyleSheet("background-color: red;");
 }
 
 MainWindow::~MainWindow()
@@ -57,45 +75,6 @@ void MainWindow::socketConnected()
 {
     // Дождаться подключения к серверу можно и тут.
     ui->sendMessageButton->setEnabled(true);
-}
-
-void MainWindow::on_connectToServerButton_clicked()
-{
-    // "Координаты" сервера (IP-адрес и порт).
-    QString serverIp = ui->serverIpEdit->text();
-    QHostAddress serverAddress;
-
-    if(!serverAddress.setAddress(serverIp)){
-        QMessageBox::warning(this, "Внимание!", "Введенный вами ip не корректный");
-        return;
-    }
-
-    bool portIsOk;
-    ushort serverPort = ui->serverPortEdit->text().toUShort(&portIsOk);
-
-    if(!portIsOk){
-        QMessageBox::warning(this, "Внимание!", "Введенный вами порт не корректный");
-        return;
-    }
-
-    // Подключаемся к серверу.
-    // Может быть долго...
-
-    socket->connectToHost(serverAddress, serverPort);
-
-    // Дождаться подключения к серверу можно и тут.
-    // Ожидание (10 сек) подключения ..
-
-    bool connected = socket->waitForConnected(10000);
-    ui->sendMessageButton->setEnabled(connected);
-    if(!connected) {
-        QMessageBox::information(this, "Внимание!", "Подключиться к серверу не удалось");
-        socket->disconnectFromHost();
-        connectedToServer = false;
-    }
-    else{
-        connectedToServer = true;
-    }
 }
 
 void MainWindow::on_sendMessageButton_clicked()

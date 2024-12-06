@@ -49,71 +49,6 @@
      <string>Чат</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="serverIpEdit">
-    <property name="geometry">
-     <rect>
-      <x>194</x>
-      <y>11</y>
-      <width>202</width>
-      <height>39</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>127.0.0.1</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>178</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Адрес сервера</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="serverPortEdit">
-    <property name="geometry">
-     <rect>
-      <x>575</x>
-      <y>11</y>
-      <width>201</width>
-      <height>39</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>40000</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="connectToServerButton">
-    <property name="geometry">
-     <rect>
-      <x>838</x>
-      <y>10</y>
-      <width>188</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Подключиться</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>402</x>
-      <y>10</y>
-      <width>167</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Порт сервера</string>
-    </property>
-   </widget>
    <widget class="QTextEdit" name="chatEdit">
     <property name="geometry">
      <rect>
@@ -388,6 +323,48 @@
     </property>
     <property name="text">
      <string>(͡° ͜ʖ ͡°)</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditName">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>30</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>10</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Соединение с сервером</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frameConnection">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
     </property>
    </widget>
   </widget>

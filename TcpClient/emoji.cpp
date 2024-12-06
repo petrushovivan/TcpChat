@@ -11,6 +11,10 @@ void MainWindow::on_pushButtonSmiley_clicked()
     }
 }
 
+void MainWindow::setUserName(QString userName) {
+    ui->lineEditName->setText(userName);
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     ui->sendMessageEdit->moveCursor(QTextCursor::End);

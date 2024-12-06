@@ -19,13 +19,16 @@ SOURCES += \
     connectToServer.cpp \
     emoji.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    usernameform.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    usernameform.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    usernameform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
