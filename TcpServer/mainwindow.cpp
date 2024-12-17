@@ -118,4 +118,12 @@ void MainWindow::clientDisconnected()
         clients.removeAt(index);
         ui->clientListWidget->takeItem(index);
     }
+    QByteArray users = getUserNamesString().toUtf8();
+    QByteArray response;
+    uint32_t dataSize = users.size();
+    response.append((char*)(&dataSize), sizeof(dataSize));
+    response.append(users);
+    for(QTcpSocket *cli : clients) {
+        cli->write(response);
+    }
 }
